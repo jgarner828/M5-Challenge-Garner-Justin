@@ -7,14 +7,20 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="registry" />
+        <module name="invoice-service" />
+        <module name="catalog-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="catalog-service" target="1.8" />
+      <module name="invoice-service" target="1.8" />
       <module name="registry" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="catalog-service" options="-parameters" />
+      <module name="invoice-service" options="-parameters" />
       <module name="registry" options="-parameters" />
     </option>
   </component>
