@@ -4,12 +4,13 @@ import com.garnerju.invoiceservice.model.Console;
 import com.garnerju.invoiceservice.model.Game;
 import com.garnerju.invoiceservice.model.TShirt;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.cloud.openfeign.FeignClientsConfiguration;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
 
-@FeignClient("gamestore-catalog")
+@FeignClient(name="gamestore-catalog", configuration= FeignClientsConfiguration.class)
 public interface CatalogClient {
 
     @GetMapping("/consoles")
