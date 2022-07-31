@@ -8,20 +8,36 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-@Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@Table(name = "tshirt")
+
 public class TShirt implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "tshirt_id")
     private long id;
     private String size;
     private String color;
     private String description;
     private BigDecimal price;
     private long quantity;
+
+    public TShirt(long id, String size, String color, String description, BigDecimal price, long quantity) {
+        this.id = id;
+        this.size = size;
+        this.color = color;
+        this.description = description;
+        this.price = price;
+        this.quantity = quantity;
+    }
+
+    public TShirt( String size, String color, String description, BigDecimal price, long quantity) {
+        this.size = size;
+        this.color = color;
+        this.description = description;
+        this.price = price;
+        this.quantity = quantity;
+    }
+
+    public TShirt(){}
 
     public long getId() {
         return id;

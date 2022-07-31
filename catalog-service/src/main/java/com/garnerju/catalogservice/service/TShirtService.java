@@ -1,5 +1,6 @@
 package com.garnerju.catalogservice.service;
 
+import com.garnerju.catalogservice.errors.NotFoundException;
 import com.garnerju.catalogservice.models.TShirt;
 import com.garnerju.catalogservice.repository.TShirtRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class TShirtService {
 
 
     public TShirt findById(long id) {
-        return tShirtRepository.findById(id).orElse(null);
+        return tShirtRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 
 
@@ -30,7 +31,13 @@ public class TShirtService {
 
     public TShirt updateTShirt(@RequestBody TShirt tShirt) {return tShirtRepository.save(tShirt);}
 
-    public void deleteTShirt(long id) {
-        tShirtRepository.deleteById(id);
+    public void deleteTShirt(long id) {  tShirtRepository.deleteById(id);
+    }
+
+
+    public List<TShirt> findByColor(String color) { return tShirtRepository.findAllByColor(color);
+    }
+
+    public List<TShirt> findBySize(String size) { return tShirtRepository.findAllBySize(size);
     }
 }

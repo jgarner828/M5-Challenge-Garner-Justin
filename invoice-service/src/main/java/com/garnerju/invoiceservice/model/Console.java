@@ -8,14 +8,12 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-@Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@Table(name = "console")
+
 public class Console implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "console_id")
+
     private long id;
     private String model;
     private String manufacturer;
@@ -23,6 +21,27 @@ public class Console implements Serializable {
     private String processor;
     private BigDecimal price;
     private long quantity;
+
+    public Console(long id, String model, String manufacturer, String memoryAmount, String processor, BigDecimal price, long quantity) {
+        this.id = id;
+        this.model = model;
+        this.manufacturer = manufacturer;
+        this.memoryAmount = memoryAmount;
+        this.processor = processor;
+        this.price = price;
+        this.quantity = quantity;
+    }
+
+    public Console( String model, String manufacturer, String memoryAmount, String processor, BigDecimal price, long quantity) {
+        this.model = model;
+        this.manufacturer = manufacturer;
+        this.memoryAmount = memoryAmount;
+        this.processor = processor;
+        this.price = price;
+        this.quantity = quantity;
+    }
+
+    public Console(){}
 
     public long getId() {
         return id;

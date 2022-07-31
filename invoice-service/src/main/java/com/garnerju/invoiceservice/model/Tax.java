@@ -20,11 +20,15 @@ public class Tax {
     private String state;
     private BigDecimal rate;
 
-    public Tax() {}
+
     public Tax(String stateCode, BigDecimal taxRate){
         this.setState(stateCode);
         this.setRate(taxRate);
     }
+
+    public Tax() {}
+
+
     public String getState() {
         return state;
     }

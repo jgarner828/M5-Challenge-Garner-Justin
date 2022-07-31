@@ -4,8 +4,13 @@ import com.garnerju.catalogservice.models.Console;
 import com.garnerju.catalogservice.service.ConsoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+
+import javax.validation.Valid;
+import javax.websocket.server.PathParam;
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -16,17 +21,32 @@ public class ConsoleController {
     ConsoleService consoleService;
 
     @GetMapping("/consoles")
-    public List<Console> getConsole() { return consoleService.findAllConsoles(); }
+    @ResponseStatus(HttpStatus.OK)
+    public List<Console> getConsole(@PathParam("manufacturer") String manufacturer) {
+        if(manufacturer == null) return consoleService.findAllConsoles();
+        else return consoleService.findAllConsolesByManufacturer(manufacturer);}
 
     @GetMapping("/consoles/{id}")
-    public Console getConsoleById(long id) {return consoleService.findById(id);}
+    @ResponseStatus(HttpStatus.OK)
+    public Console getConsoleById(Long id) {return consoleService.findById(id);}
 
     @PostMapping("/consoles")
-    public Console createConsole(@RequestBody Console console) {return consoleService.createConsole(console);}
+    @ResponseStatus(HttpStatus.CREATED)
+    public Console createConsole(@RequestBody @Valid Console console) {
+        if(console.getPrice() == null || console.getPrice().equals(BigDecimal.valueOf(0)))throw new RuntimeException("Must have a price");
+        if(console.getQuantity() < 1) throw new RuntimeException("Must have a quantity");
+        if(console.getManufacturer() == null) throw new RuntimeException("Must have a manufacturer");
+        return consoleService.createConsole(console);}
 
     @PutMapping("/consoles")
-    public Console updateConsole(@RequestBody Console console) {return consoleService.updateConsole(console);}
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public Console updateConsole(@RequestBody @Valid Console console) {
+        if(console.getPrice() == null || console.getPrice().equals(BigDecimal.valueOf(0)))throw new RuntimeException("Must have a price");
+        if(console.getQuantity() < 1) throw new RuntimeException("Must have a quantity");
+        if(console.getManufacturer() == null) throw new RuntimeException("Must have a manufacturer");
+        return consoleService.updateConsole(console);}
 
     @DeleteMapping("/consoles/{id}")
-    public void deleteConsole(@PathVariable long id) {consoleService.deleteConsole(id);}
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteConsole(@PathVariable Long id) {consoleService.deleteConsole(id);}
 }

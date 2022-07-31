@@ -2,8 +2,11 @@ package com.garnerju.catalogservice.models;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -11,6 +14,7 @@ import java.util.Objects;
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "tshirt")
+@Validated
 public class TShirt implements Serializable {
 
     @Id
@@ -20,8 +24,29 @@ public class TShirt implements Serializable {
     private String size;
     private String color;
     private String description;
+    @NotNull
     private BigDecimal price;
+    @Min(1)
     private long quantity;
+
+    public TShirt(long id, String size, String color, String description, BigDecimal price, long quantity) {
+        this.id = id;
+        this.size = size;
+        this.color = color;
+        this.description = description;
+        this.price = price;
+        this.quantity = quantity;
+    }
+
+    public TShirt( String size, String color, String description, BigDecimal price, long quantity) {
+        this.size = size;
+        this.color = color;
+        this.description = description;
+        this.price = price;
+        this.quantity = quantity;
+    }
+
+    public TShirt(){   }
 
     public long getId() {
         return id;

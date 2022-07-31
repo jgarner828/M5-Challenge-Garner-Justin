@@ -7,9 +7,8 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-@Entity
+
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@Table(name = "game")
 public class Game {
 
     @Id
@@ -22,6 +21,29 @@ public class Game {
     private BigDecimal price;
     private String studio;
     private long quantity;
+
+
+    public Game(long id, String title, String esrbRating, String description, BigDecimal price, String studio, long quantity) {
+        this.id = id;
+        this.title = title;
+        this.esrbRating = esrbRating;
+        this.description = description;
+        this.price = price;
+        this.studio = studio;
+        this.quantity = quantity;
+    }
+
+    public Game(String title, String esrbRating, String description, BigDecimal price, String studio, long quantity) {
+
+        this.title = title;
+        this.esrbRating = esrbRating;
+        this.description = description;
+        this.price = price;
+        this.studio = studio;
+        this.quantity = quantity;
+    }
+
+    public Game(){}
 
     public long getId() {
         return id;

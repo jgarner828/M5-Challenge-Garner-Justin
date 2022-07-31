@@ -4,8 +4,11 @@ import com.garnerju.catalogservice.models.TShirt;
 import com.garnerju.catalogservice.service.TShirtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 import java.util.List;
 
 @RestController
@@ -15,17 +18,26 @@ public class TShirtController {
     TShirtService tShirtService;
 
     @GetMapping("/tShirts")
-    public List<TShirt> getTShirt() { return tShirtService.findAllTShirts(); }
+    @ResponseStatus(HttpStatus.OK)
+    public List<TShirt> getTShirt(@PathParam("color") String color, @PathParam("size") String size) {
+        if (color == null && size == null)  return tShirtService.findAllTShirts();
+        if (size == null) return tShirtService.findByColor(color);
+        else return tShirtService.findBySize(size);
+    }
 
     @GetMapping("/tShirts/{id}")
-    public TShirt getTShirtById(long id) {return tShirtService.findById(id);}
+    @ResponseStatus(HttpStatus.OK)
+    public TShirt getTShirtById(Long id) {return tShirtService.findById(id);}
 
     @PostMapping("/tShirts")
-    public TShirt createTShirt(@RequestBody TShirt tShirt) {return tShirtService.createTShirt(tShirt);}
+    @ResponseStatus(HttpStatus.CREATED)
+    public TShirt createTShirt(@RequestBody @Valid  TShirt tShirt) {return tShirtService.createTShirt(tShirt);}
 
     @PutMapping("/tShirts")
-    public TShirt updateTShirt(@RequestBody TShirt tShirt) {return tShirtService.updateTShirt(tShirt);}
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public TShirt updateTShirt(@RequestBody @Valid TShirt tShirt) {return tShirtService.updateTShirt(tShirt);}
 
     @DeleteMapping("/tShirts/{id}")
-    public void deleteTShirt(@PathVariable long id) {tShirtService.deleteTShirt(id);}
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteTShirt(@PathVariable Long id) {tShirtService.deleteTShirt(id);}
 }

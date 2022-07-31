@@ -2,8 +2,12 @@ package com.garnerju.catalogservice.models;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.validator.constraints.Length;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -11,18 +15,44 @@ import java.util.Objects;
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "console")
+@Validated
 public class Console implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "console_id")
-    private long id;
+    private Long id;
     private String model;
+    @NotEmpty
     private String manufacturer;
     private String memoryAmount;
     private String processor;
+    @NotNull
     private java.math.BigDecimal price;
+
+    @Min(1)
     private long quantity;
+
+    public Console(Long id, String model, String manufacturer, String memoryAmount, String processor, BigDecimal price, int quantity) {
+        this.id = id;
+        this.model = model;
+        this.manufacturer = manufacturer;
+        this.memoryAmount = memoryAmount;
+        this.processor = processor;
+        this.price = price;
+        this.quantity = quantity;
+    }
+
+    public Console( String model, String manufacturer, String memoryAmount, String processor, BigDecimal price, int quantity) {
+        this.model = model;
+        this.manufacturer = manufacturer;
+        this.memoryAmount = memoryAmount;
+        this.processor = processor;
+        this.price = price;
+        this.quantity = quantity;
+    }
+
+    public Console(){}
 
     public long getId() {
         return id;
@@ -76,7 +106,7 @@ public class Console implements Serializable {
         return quantity;
     }
 
-    public void setQuantity(long quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 

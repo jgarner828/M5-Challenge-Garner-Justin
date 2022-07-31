@@ -2,26 +2,56 @@ package com.garnerju.catalogservice.models;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Objects;
 
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "game")
+@Validated
 public class Game {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "game_id")
     private long id;
+    @NotEmpty
     private String title;
     private String esrbRating;
     private String description;
+    @NotNull
     private BigDecimal price;
     private String studio;
+    @Min(1)
     private long quantity;
+
+    public Game(long id, String title, String esrbRating, String description, BigDecimal price, String studio, long quantity) {
+        this.id = id;
+        this.title = title;
+        this.esrbRating = esrbRating;
+        this.description = description;
+        this.price = price;
+        this.studio = studio;
+        this.quantity = quantity;
+    }
+
+    public Game( String title, String esrbRating, String description, BigDecimal price, String studio, long quantity) {
+        this.title = title;
+        this.esrbRating = esrbRating;
+        this.description = description;
+        this.price = price;
+        this.studio = studio;
+        this.quantity = quantity;
+    }
+
+    public Game() {}
+
 
     public long getId() {
         return id;
