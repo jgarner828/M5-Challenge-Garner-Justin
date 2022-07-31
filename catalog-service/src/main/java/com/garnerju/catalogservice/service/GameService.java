@@ -2,6 +2,7 @@ package com.garnerju.catalogservice.service;
 
 import com.garnerju.catalogservice.errors.NotFoundException;
 import com.garnerju.catalogservice.models.Game;
+import com.garnerju.catalogservice.models.TShirt;
 import com.garnerju.catalogservice.repository.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,31 +17,65 @@ public class GameService {
     GameRepository gameRepository;
 
     public List<Game> findAllGames() {
-        return gameRepository.findAll();
-    }
+        List<Game> gameList = gameRepository.findAll();
 
+        if (gameList == null || gameList.isEmpty()) {
+            throw new IllegalArgumentException("No games were found.");
+        } else {
+            return gameList;
+        }
+    }
 
     public Game findById(long id) {
-        return gameRepository.findById(id).orElseThrow(NotFoundException::new);
+        return gameRepository.findById(id).orElse(null);
     }
-
 
     public Game createGame(Game newGame) {
         return gameRepository.save(newGame);
     }
 
-    public Game updateGame(@RequestBody Game game) {return gameRepository.save(game);}
+    public Game updateGame(Game game) {      //Validate incoming Game Data in the view model
+        if (game == null) {
+            throw new IllegalArgumentException("No Game data is passed! Game object is null!");
+        }
+        //make sure the game exists. and if not, throw exception...
+        else if (this.findById(game.getId()) == null) {
+            throw new IllegalArgumentException("No such game to update.");
+        }
+         return gameRepository.save(game);
+    }
 
     public void deleteGame(long id) {
         gameRepository.deleteById(id);
     }
 
-    public List<Game> findGameByTitle(String title) { return gameRepository.findAllByTitle(title);}
+    public List<Game> findGameByTitle(String title) {
 
-    public List<Game> findGameByESRB(String esrb) { return gameRepository.findAllByEsrbRating(esrb);}
+        List<Game> gameList = gameRepository.findAllByTitle(title);
 
-    public List<Game> getGameByStudio(String studio) { return gameRepository.findAllByStudio(studio);}
+        if (gameList == null || gameList.isEmpty()) {
+            throw new IllegalArgumentException("No games were found.");
+        } else {
+            return gameList;
+        }}
 
-    public List<Game> findGameByStudio(String studio) { return gameRepository.findAllByStudio(studio);}
+    public List<Game> findGameByESRB(String esrb) {
+        List<Game> gameList = gameRepository.findAllByEsrbRating(esrb);
+
+        if (gameList == null || gameList.isEmpty()) {
+            throw new IllegalArgumentException("No games with that ESRB rating were found.");
+        } else {
+            return gameList;
+        }}
+
+    public List<Game> findGameByStudio(String studio) {
+
+        List<Game> gameList = gameRepository.findAllByStudio(studio);
+
+        if (gameList == null || gameList.isEmpty()) {
+            throw new IllegalArgumentException("No games made by that studio were found.");
+        } else {
+            return gameList;
+        }
     }
-
+}

@@ -159,9 +159,9 @@ public class InvoiceRepositoryTest {
         //Act
         invoice1 = invoiceRepository.save(invoice1);
 
-        List<Invoice> foundNoinvoice = invoiceRepository.findByName("invalidValue");
+        List<Invoice> foundNoinvoice = invoiceRepository.findByCustomerName("invalidValue");
 
-        List<Invoice> foundOneinvoice = invoiceRepository.findByName(invoice1.getName());
+        List<Invoice> foundOneinvoice = invoiceRepository.findByCustomerName(invoice1.getName());
 
         //Assert
         assertEquals(foundOneinvoice.size(),1);

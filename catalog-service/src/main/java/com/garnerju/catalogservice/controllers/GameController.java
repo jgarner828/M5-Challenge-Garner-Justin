@@ -19,20 +19,22 @@ public class GameController {
     @Autowired
     GameService gameService;
 
-    @GetMapping("/games")
+    @GetMapping("/game")
     @ResponseStatus(HttpStatus.OK)
-    public List<Game> getGame(@PathParam("studio") String studio, @PathParam("esrbRating") String esrbRating, @PathParam("title") String title) {
-        if(studio == null && esrbRating == null) return gameService.findGameByTitle(title);
-        if(studio == null && title == null) return gameService.findGameByESRB(esrbRating);
-        if(title == null && esrbRating == null) return gameService.findGameByStudio(studio);
+    public List<Game> getGame(@PathParam("studio") String studio, @PathParam("esrb") String esrbRating, @PathParam("title") String title) {
 
-        return gameService.findAllGames(); }
+        if (studio == null && esrbRating == null && title == null) return gameService.findAllGames();
+        if (studio == null && esrbRating == null) return gameService.findGameByTitle(title);
+        if (title == null && esrbRating == null) return gameService.findGameByStudio(studio);
 
-    @GetMapping("/games/{id}")
+        else return gameService.findGameByESRB(esrbRating);
+    }
+
+    @GetMapping("/game/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Game getGameById(Long id) {return gameService.findById(id);}
+    public Game getGameById(@PathVariable("id") Long id) {return gameService.findById(id);}
 
-    @PostMapping("/games")
+    @PostMapping("/game")
     @ResponseStatus(HttpStatus.CREATED)
     public Game createGame(@RequestBody @Valid Game game) {
         if(game.getPrice() == null || game.getPrice().equals(BigDecimal.valueOf(0)))throw new RuntimeException("Must have a price");
@@ -40,7 +42,7 @@ public class GameController {
         if(game.getTitle() == null) throw new RuntimeException("Must have a title");
         return gameService.createGame(game);}
 
-    @PutMapping("/games")
+    @PutMapping("/game")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public Game updateGame(@RequestBody @Valid  Game game) {
         if(game.getPrice() == null || game.getPrice().equals(BigDecimal.valueOf(0)))throw new RuntimeException("Must have a price");
@@ -49,7 +51,7 @@ public class GameController {
         return gameService.updateGame(game);
     }
 
-    @DeleteMapping("/games/{id}")
+    @DeleteMapping("/game/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteGame(@PathVariable Long id) {gameService.deleteGame(id);}
+    public void deleteGame(@PathVariable("id") Long id) {gameService.deleteGame(id);}
 }

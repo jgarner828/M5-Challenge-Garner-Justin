@@ -20,33 +20,43 @@ public class ConsoleService {
 
 
     public List<Console> findAllConsoles() {
-        return consoleRepository.findAll();
+        List<Console> consoleList = consoleRepository.findAll();
+
+        if (consoleList == null || consoleList.isEmpty()) {
+            throw new IllegalArgumentException("No consoles were found.");
+        } else {
+            return consoleList;
+        }
     }
 
+    public List<Console> findConsoleByManufacturer(String manufacturer) {
+
+        List<Console> consoleList = consoleRepository.findAllByManufacturer(manufacturer);
+
+        if (consoleList == null || consoleList.isEmpty()) {
+            throw new IllegalArgumentException("No consoles by that manufacturer were found.");
+        } else {
+            return consoleList;
+        }
+    }
 
     public Console findById(Long id) {
-        return consoleRepository.findById(id).orElseThrow(NotFoundException::new);
+        return consoleRepository.findById(id).orElse(null);
     }
 
+    public Console createConsole(Console newConsole) {  return consoleRepository.save(newConsole);  }
 
-    public Console createConsole(@Valid Console newConsole) {   return consoleRepository.save(newConsole);   }
+    public Console updateConsole(Console console) {
 
-    public Console updateConsole(@RequestBody @Valid Console console) {
         Optional<Console> existingConsole = consoleRepository.findById(console.getId());
         if (existingConsole.isPresent()) {
             console.setId(existingConsole.get().getId());
             return consoleRepository.save(console);
         }
-        else throw new NotFoundException();
+        else throw new NotFoundException("Console with that ID does not exist");
         }
 
-    public void deleteConsole(long id) {
-        consoleRepository.deleteById(id);
-    }
+    public void deleteConsole(long id) { consoleRepository.deleteById(id); }
 
-    public List<Console> getConsoleByManufacturer(@PathVariable("manufacturer") String manufacturer) {return consoleRepository.findAllByManufacturer(manufacturer);}
 
-    public List<Console> findAllConsolesByManufacturer(String manufacturer) {
-        return consoleRepository.findAllByManufacturer(manufacturer);
-    }
 }

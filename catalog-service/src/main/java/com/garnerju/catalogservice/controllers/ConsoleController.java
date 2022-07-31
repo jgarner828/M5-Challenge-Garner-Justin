@@ -20,17 +20,17 @@ public class ConsoleController {
     @Autowired
     ConsoleService consoleService;
 
-    @GetMapping("/consoles")
+    @GetMapping("/console")
     @ResponseStatus(HttpStatus.OK)
     public List<Console> getConsole(@PathParam("manufacturer") String manufacturer) {
         if(manufacturer == null) return consoleService.findAllConsoles();
-        else return consoleService.findAllConsolesByManufacturer(manufacturer);}
+        else return consoleService.findConsoleByManufacturer(manufacturer);}
 
-    @GetMapping("/consoles/{id}")
+    @GetMapping("/console/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Console getConsoleById(Long id) {return consoleService.findById(id);}
+    public Console getConsoleById(@PathVariable("id") Long id) {  return consoleService.findById(id);  }
 
-    @PostMapping("/consoles")
+    @PostMapping("/console")
     @ResponseStatus(HttpStatus.CREATED)
     public Console createConsole(@RequestBody @Valid Console console) {
         if(console.getPrice() == null || console.getPrice().equals(BigDecimal.valueOf(0)))throw new RuntimeException("Must have a price");
@@ -38,7 +38,7 @@ public class ConsoleController {
         if(console.getManufacturer() == null) throw new RuntimeException("Must have a manufacturer");
         return consoleService.createConsole(console);}
 
-    @PutMapping("/consoles")
+    @PutMapping("/console")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public Console updateConsole(@RequestBody @Valid Console console) {
         if(console.getPrice() == null || console.getPrice().equals(BigDecimal.valueOf(0)))throw new RuntimeException("Must have a price");
@@ -46,7 +46,7 @@ public class ConsoleController {
         if(console.getManufacturer() == null) throw new RuntimeException("Must have a manufacturer");
         return consoleService.updateConsole(console);}
 
-    @DeleteMapping("/consoles/{id}")
+    @DeleteMapping("/console/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteConsole(@PathVariable Long id) {consoleService.deleteConsole(id);}
 }

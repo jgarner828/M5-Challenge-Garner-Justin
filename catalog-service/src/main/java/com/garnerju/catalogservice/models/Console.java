@@ -21,7 +21,7 @@ public class Console implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "console_id")
-    private Long id;
+    private long id;
     private String model;
     @NotEmpty
     private String manufacturer;
@@ -30,10 +30,12 @@ public class Console implements Serializable {
     @NotNull
     private java.math.BigDecimal price;
 
+
+
     @Min(1)
     private long quantity;
 
-    public Console(Long id, String model, String manufacturer, String memoryAmount, String processor, BigDecimal price, int quantity) {
+    public Console(long id, String model, String manufacturer, String memoryAmount, String processor, BigDecimal price, int quantity) {
         this.id = id;
         this.model = model;
         this.manufacturer = manufacturer;
@@ -109,6 +111,7 @@ public class Console implements Serializable {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
+
 
     @Override
     public boolean equals(Object o) {

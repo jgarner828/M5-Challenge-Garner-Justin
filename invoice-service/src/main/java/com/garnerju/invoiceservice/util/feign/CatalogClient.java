@@ -3,6 +3,7 @@ package com.garnerju.invoiceservice.util.feign;
 import com.garnerju.invoiceservice.model.Console;
 import com.garnerju.invoiceservice.model.Game;
 import com.garnerju.invoiceservice.model.TShirt;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.FeignClientsConfiguration;
 import org.springframework.web.bind.annotation.*;
@@ -10,51 +11,52 @@ import java.util.List;
 
 
 
-@FeignClient(name="gamestore-catalog", configuration= FeignClientsConfiguration.class)
+@FeignClient(name="gamestore-catalog", configuration= FeignClientsConfiguration.class, url="http://localhost:7474")
+@RefreshScope
 public interface CatalogClient {
 
-    @GetMapping("/consoles")
+    @GetMapping("/console")
     public List<Console> getConsole();
 
-    @GetMapping("/consoles/{id}")
-    public Console getConsoleById(long id);
+    @GetMapping("/console/{id}")
+    public Console getConsoleById(@PathVariable("id") long id);
 
-    @PostMapping("/consoles")
+    @PostMapping("/console")
     public Console createConsole(@RequestBody Console console);
 
-    @PutMapping("/consoles")
+    @PutMapping("/console")
     public Console updateConsole(@RequestBody Console console);
 
-    @DeleteMapping("/consoles/{id}")
-    public void deleteConsole(@PathVariable long id);
+    @DeleteMapping("/console/{id}")
+    public void deleteConsole(@PathVariable("id") long id);
 
     @GetMapping("/games")
     public List<Game> getGame();
 
-    @GetMapping("/games/{id}")
-    public Game getGameById(long id);
+    @GetMapping("/game/{id}")
+    public Game getGameById(@PathVariable("id") long id);
 
-    @PostMapping("/games")
+    @PostMapping("/game")
     public Game createGame(@RequestBody Game game);
 
-    @PutMapping("/games")
+    @PutMapping("/game")
     public Game updateGame(@RequestBody Game game);
 
-    @DeleteMapping("/games/{id}")
-    public void deleteGame(@PathVariable long id);
+    @DeleteMapping("/game/{id}")
+    public void deleteGame(@PathVariable("id") long id);
 
-    @GetMapping("/tShirts")
+    @GetMapping("/tshirt")
     public List<TShirt> getTShirt();
 
-    @GetMapping("/tShirts/{id}")
-    public TShirt getTShirtById(long id);
+    @GetMapping("/tshirt/{id}")
+    public TShirt getTShirtById(@PathVariable("id") long id);
 
-    @PostMapping("/tShirts")
+    @PostMapping("/tshirt")
     public TShirt createTShirt(@RequestBody TShirt tShirt);
 
-    @PutMapping("/tShirts")
+    @PutMapping("/tshirt")
     public TShirt updateTShirt(@RequestBody TShirt tShirt);
 
-    @DeleteMapping("/tShirts/{id}")
-    public void deleteTShirt(@PathVariable long id);
+    @DeleteMapping("/tshirt/{id}")
+    public void deleteTShirt(@PathVariable("id") long id);
 }

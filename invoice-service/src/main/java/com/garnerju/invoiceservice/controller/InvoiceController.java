@@ -6,12 +6,15 @@ import com.garnerju.invoiceservice.util.feign.CatalogClient;
 import com.netflix.discovery.converters.Auto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RefreshScope
+@CrossOrigin(origins = {"http://localhost:3000"})
 public class InvoiceController {
 
     @Autowired
@@ -22,18 +25,36 @@ public class InvoiceController {
 
     InvoiceController(CatalogClient catalogClient) {this.catalogClient = catalogClient;}
 
-    @GetMapping("/invoices")
-    public List<Invoice> getInvoices() { return invoiceService.getInvoices(); }
+    @GetMapping("/invoice")
+    public List<Invoice> getAllInvoices() { return  invoiceService.getInvoices();   }
 
     @GetMapping("/invoice/{id}")
-    public Invoice  getInvoicesById(Long id) { return invoiceService.getInvoicesById(id);}
+    public Invoice findInvoice(@PathVariable("id") long invoiceId) {
+        Invoice invoice = invoiceService.getInvoicesById(invoiceId);
+        if (invoice == null) {
+            throw new IllegalArgumentException("Invoice could not be retrieved for id " + invoiceId);
+        } else {
+            return invoice;
+        }
+    }
+
+    @GetMapping("invoice/cname/{name}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Invoice> findInvoicesByCustomerName(@PathVariable String name) {
+        List<Invoice> invoiceList = invoiceService.getInvoicesByCustomerName(name);
+
+        if (invoiceList == null || invoiceList.isEmpty()) {
+            throw new IllegalArgumentException("No invoices were found for: "+name);
+        } else {
+            return invoiceList;
+        }
+    }
 
     @PostMapping("/invoice")
-    public Invoice createInvoice(@RequestBody Invoice invoice) { return invoiceService.createInvoice(invoice); }
-
-    @PutMapping("/invoice")
-    public void updateInvoice(@RequestBody Invoice invoice) { invoiceService.updateInvoice(invoice); }
+    public Invoice purchaseItem(@RequestBody @Valid Invoice invoice) { return invoiceService.createInvoice(invoice); }
 
     @DeleteMapping("/invoice/{id}")
     public void deleteInvoice(@RequestBody Invoice invoice) { invoiceService.deleteInvoice(invoice); }
+    
+    
 }
