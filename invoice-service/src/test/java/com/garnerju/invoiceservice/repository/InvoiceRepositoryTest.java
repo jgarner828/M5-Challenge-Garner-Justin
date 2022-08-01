@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -22,7 +23,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
-
+@EnableConfigurationProperties
 public class InvoiceRepositoryTest {
 
     @Autowired
@@ -65,14 +66,9 @@ public class InvoiceRepositoryTest {
         tShirt1.setSize("M");
         tShirt1.setColor("Blue");
         tShirt1.setDescription("v-neck short sleeve");
-
-        //The double quotes forces the decimal point.
-        // an alternative to set BigDecimal is using:
-        // tShirt1.setPrice(new BigDecimal("15.99").setScale(2, RoundingMode.HALF_UP));
         tShirt1.setPrice(new BigDecimal("15.99"));
-
         tShirt1.setQuantity(8);
-        tShirt1 = catalogClient.createTShirt(tShirt1);
+
 
         Invoice invoice1 = new Invoice();
         invoice1.setName("Joe Black");
@@ -129,12 +125,10 @@ public class InvoiceRepositoryTest {
         //an alternative to set BigDecimal is using:
         //tShirt1.setPrice(new BigDecimal("15.99").setScale(2, RoundingMode.HALF_UP));
         tShirt1.setPrice(new BigDecimal("15.99"));
-
         tShirt1.setQuantity(8);
-        tShirt1 = catalogClient.createTShirt(tShirt1);
 
         Invoice invoice1 = new Invoice();
-        invoice1.setName("Joe Black");
+        invoice1.setName("Test");
         invoice1.setStreet("123 Main St");
         invoice1.setCity("any City");
         invoice1.setState("NY");
@@ -159,9 +153,9 @@ public class InvoiceRepositoryTest {
         //Act
         invoice1 = invoiceRepository.save(invoice1);
 
-        List<Invoice> foundNoinvoice = invoiceRepository.findByCustomerName("invalidValue");
+        List<Invoice> foundNoinvoice = invoiceRepository.findByName("invalidValue");
 
-        List<Invoice> foundOneinvoice = invoiceRepository.findByCustomerName(invoice1.getName());
+        List<Invoice> foundOneinvoice = invoiceRepository.findByName(invoice1.getName());
 
         //Assert
         assertEquals(foundOneinvoice.size(),1);

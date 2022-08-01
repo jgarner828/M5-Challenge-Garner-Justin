@@ -26,7 +26,6 @@ public class GameController {
         if (studio == null && esrbRating == null && title == null) return gameService.findAllGames();
         if (studio == null && esrbRating == null) return gameService.findGameByTitle(title);
         if (title == null && esrbRating == null) return gameService.findGameByStudio(studio);
-
         else return gameService.findGameByESRB(esrbRating);
     }
 

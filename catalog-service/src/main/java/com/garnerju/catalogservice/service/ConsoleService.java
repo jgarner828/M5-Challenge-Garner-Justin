@@ -1,14 +1,12 @@
 package com.garnerju.catalogservice.service;
 
-import com.garnerju.catalogservice.errors.NotFoundException;
+
 import com.garnerju.catalogservice.models.Console;
 import com.garnerju.catalogservice.repository.ConsoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import javax.validation.Valid;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -18,12 +16,15 @@ public class ConsoleService {
     @Autowired
     ConsoleRepository consoleRepository;
 
+    public ConsoleService(ConsoleRepository consoleRepository) {
+    }
+
 
     public List<Console> findAllConsoles() {
         List<Console> consoleList = consoleRepository.findAll();
 
         if (consoleList == null || consoleList.isEmpty()) {
-            throw new IllegalArgumentException("No consoles were found.");
+            throw new RuntimeException("No consoles were found.");
         } else {
             return consoleList;
         }
@@ -34,15 +35,21 @@ public class ConsoleService {
         List<Console> consoleList = consoleRepository.findAllByManufacturer(manufacturer);
 
         if (consoleList == null || consoleList.isEmpty()) {
-            throw new IllegalArgumentException("No consoles by that manufacturer were found.");
+            throw new RuntimeException("No consoles by that manufacturer were found.");
         } else {
             return consoleList;
         }
     }
 
     public Console findById(Long id) {
-        return consoleRepository.findById(id).orElse(null);
+        Optional<Console> existingConsole = consoleRepository.findById(id);
+        if (existingConsole.isPresent()) {
+            return existingConsole.get();
+        }
+        else throw new RuntimeException("Console with that ID does not exist");
     }
+
+
 
     public Console createConsole(Console newConsole) {  return consoleRepository.save(newConsole);  }
 
@@ -53,7 +60,7 @@ public class ConsoleService {
             console.setId(existingConsole.get().getId());
             return consoleRepository.save(console);
         }
-        else throw new NotFoundException("Console with that ID does not exist");
+        else throw new RuntimeException("Console with that ID does not exist");
         }
 
     public void deleteConsole(long id) { consoleRepository.deleteById(id); }

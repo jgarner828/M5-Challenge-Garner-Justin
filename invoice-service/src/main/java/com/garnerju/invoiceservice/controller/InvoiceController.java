@@ -3,7 +3,6 @@ package com.garnerju.invoiceservice.controller;
 import com.garnerju.invoiceservice.model.Invoice;
 import com.garnerju.invoiceservice.service.InvoiceService;
 import com.garnerju.invoiceservice.util.feign.CatalogClient;
-import com.netflix.discovery.converters.Auto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
@@ -26,7 +25,16 @@ public class InvoiceController {
     InvoiceController(CatalogClient catalogClient) {this.catalogClient = catalogClient;}
 
     @GetMapping("/invoice")
-    public List<Invoice> getAllInvoices() { return  invoiceService.getInvoices();   }
+    public List<Invoice> getAllInvoices() {
+        List<Invoice> invoiceList = invoiceService.getInvoices();
+
+        if (invoiceList == null || invoiceList.isEmpty()) {
+            throw new IllegalArgumentException("No invoices were found.");
+        } else {
+            return invoiceList;
+        }
+        
+    }
 
     @GetMapping("/invoice/{id}")
     public Invoice findInvoice(@PathVariable("id") long invoiceId) {
@@ -38,9 +46,9 @@ public class InvoiceController {
         }
     }
 
-    @GetMapping("invoice/cname/{name}")
+    @GetMapping("/invoice/cname/{name}")
     @ResponseStatus(HttpStatus.OK)
-    public List<Invoice> findInvoicesByCustomerName(@PathVariable String name) {
+    public List<Invoice> findInvoicesByCustomerName(@PathVariable("name") String name) {
         List<Invoice> invoiceList = invoiceService.getInvoicesByCustomerName(name);
 
         if (invoiceList == null || invoiceList.isEmpty()) {
@@ -50,8 +58,14 @@ public class InvoiceController {
         }
     }
 
+
     @PostMapping("/invoice")
-    public Invoice purchaseItem(@RequestBody @Valid Invoice invoice) { return invoiceService.createInvoice(invoice); }
+    @ResponseStatus(HttpStatus.CREATED)
+    public Invoice purchaseItem(@RequestBody @Valid Invoice invoice) {
+
+       if(invoiceService.createInvoice(invoice) == null) { throw new RuntimeException("Invoice creation failed"); }
+       else return invoice;
+         }
 
     @DeleteMapping("/invoice/{id}")
     public void deleteInvoice(@RequestBody Invoice invoice) { invoiceService.deleteInvoice(invoice); }

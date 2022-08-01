@@ -15,12 +15,15 @@ public class TShirtService {
     @Autowired
     TShirtRepository tShirtRepository;
 
+    public TShirtService(TShirtRepository tshirtRepository) {
+    }
+
 
     public List<TShirt> findAllTShirts() {
         List<TShirt> tShirtList = tShirtRepository.findAll();
 
         if (tShirtList == null || tShirtList.isEmpty()) {
-            throw new IllegalArgumentException("No shirts were found.");
+            throw new RuntimeException("No shirts were found.");
         } else {
             return tShirtList;
         }
@@ -34,11 +37,11 @@ public class TShirtService {
 
     public TShirt updateTShirt(TShirt tShirt) {      //Validate incoming Game Data in the view model
         if (tShirt == null) {
-            throw new IllegalArgumentException("No shirt data is passed! shirt object is null!");
+            throw new RuntimeException("No shirt data is passed! shirt object is null!");
         }
         //make sure the game exists. and if not, throw exception...
         else if (this.findById(tShirt.getId()) == null) {
-            throw new IllegalArgumentException("No such shirt to update.");
+            throw new RuntimeException("No such shirt to update.");
         }
         return tShirtRepository.save(tShirt);
     }
@@ -50,7 +53,7 @@ public class TShirtService {
         List<TShirt> tShirtList = tShirtRepository.findAllByColor(color);
 
         if (tShirtList == null || tShirtList.isEmpty()) {
-            throw new IllegalArgumentException("No shirts that color were found.");
+            throw new RuntimeException("No shirts that color were found.");
         } else {
             return tShirtList;
         }
@@ -61,7 +64,7 @@ public class TShirtService {
         List<TShirt> tShirtList = tShirtRepository.findAllBySize(size);
 
         if (tShirtList == null || tShirtList.isEmpty()) {
-            throw new IllegalArgumentException("No shirts that size were found.");
+            throw new RuntimeException("No shirts that size were found.");
         } else {
             return tShirtList;
         }

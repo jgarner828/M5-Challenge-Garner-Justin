@@ -16,6 +16,9 @@ public class GameService {
     @Autowired
     GameRepository gameRepository;
 
+    public GameService(GameRepository gameRepository) {
+    }
+
     public List<Game> findAllGames() {
         List<Game> gameList = gameRepository.findAll();
 
@@ -27,7 +30,7 @@ public class GameService {
     }
 
     public Game findById(long id) {
-        return gameRepository.findById(id).orElse(null);
+        return gameRepository.findById(id).orElseThrow(() -> new RuntimeException("No games were found."));
     }
 
     public Game createGame(Game newGame) {
@@ -36,11 +39,11 @@ public class GameService {
 
     public Game updateGame(Game game) {      //Validate incoming Game Data in the view model
         if (game == null) {
-            throw new IllegalArgumentException("No Game data is passed! Game object is null!");
+            throw new RuntimeException("No Game data is passed! Game object is null!");
         }
         //make sure the game exists. and if not, throw exception...
         else if (this.findById(game.getId()) == null) {
-            throw new IllegalArgumentException("No such game to update.");
+            throw new RuntimeException("No such game to update.");
         }
          return gameRepository.save(game);
     }
@@ -54,7 +57,7 @@ public class GameService {
         List<Game> gameList = gameRepository.findAllByTitle(title);
 
         if (gameList == null || gameList.isEmpty()) {
-            throw new IllegalArgumentException("No games were found.");
+            throw new RuntimeException("No games were found.");
         } else {
             return gameList;
         }}
@@ -63,7 +66,7 @@ public class GameService {
         List<Game> gameList = gameRepository.findAllByEsrbRating(esrb);
 
         if (gameList == null || gameList.isEmpty()) {
-            throw new IllegalArgumentException("No games with that ESRB rating were found.");
+            throw new RuntimeException("No games with that ESRB rating were found.");
         } else {
             return gameList;
         }}
@@ -73,7 +76,7 @@ public class GameService {
         List<Game> gameList = gameRepository.findAllByStudio(studio);
 
         if (gameList == null || gameList.isEmpty()) {
-            throw new IllegalArgumentException("No games made by that studio were found.");
+            throw new RuntimeException("No games made by that studio were found.");
         } else {
             return gameList;
         }

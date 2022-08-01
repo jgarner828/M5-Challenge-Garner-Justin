@@ -61,7 +61,7 @@ public class TShirtControllerTest {
         when(shirtService.findAllTShirts()).thenReturn(expectedTShirt);
         String expectedJson = mapper.writeValueAsString(expectedTShirt);
 
-        mockMvc.perform(get("/tShirts")) //Act
+        mockMvc.perform(get("/tshirt")) //Act
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(expectedJson));
@@ -76,7 +76,7 @@ public class TShirtControllerTest {
         when(shirtRepository.findAllByColor("white")).thenReturn(expectedTShirt);
         String expectedJson = mapper.writeValueAsString(expectedTShirt);
 
-        mockMvc.perform(get("/tShirts?color=white")) //Act
+        mockMvc.perform(get("/tshirt?color=white")) //Act
                 .andDo(print())
                 .andExpect(status().isOk());
     }
@@ -90,25 +90,24 @@ public class TShirtControllerTest {
 
         String expectedJson = mapper.writeValueAsString(expectedTShirt);
 
-        mockMvc.perform(get("/tShirts?size=md")) //Act
+        mockMvc.perform(get("/tshirt?size=md")) //Act
                 .andDo(print())
                 .andExpect(status().isOk());
     }
 
-//    TODO NEED TO TROUBLESHOOT WHY IT IS RETURNING IMPROPERLY.
-//    @Test
-//    public void ShouldGetTShirtsById() throws Exception {
-//
-//        TShirt newShirt = new TShirt(Long.valueOf(1),"small", "white", "shirt", BigDecimal.valueOf(10.00), 10);
-//
-//        when(shirtService.findById(newShirt.getId())).thenReturn(newShirt);
-//
-//        mockMvc.perform( MockMvcRequestBuilders
-//                        .get("/tShirts/{id}",newShirt.getId())
-//                        .accept(MediaType.APPLICATION_JSON))
-//                .andDo(print()) //for debugging purposes. Prints the request, handler,... and response objects to the console below.
-//                .andExpect(status().isOk());
-//    }
+    @Test
+    public void ShouldGetTShirtsById() throws Exception {
+
+        TShirt newShirt = new TShirt(Long.valueOf(1),"small", "white", "shirt", BigDecimal.valueOf(10.00), 10);
+
+        when(shirtService.findById(newShirt.getId())).thenReturn(newShirt);
+
+        mockMvc.perform( MockMvcRequestBuilders
+                        .get("/tshirt/{id}",newShirt.getId())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print()) //for debugging purposes. Prints the request, handler,... and response objects to the console below.
+                .andExpect(status().isOk());
+    }
 
     @Test
     public void shouldCreateTShirt() throws Exception{
@@ -122,7 +121,7 @@ public class TShirtControllerTest {
         String inputJson = mapper.writeValueAsString(inputBody);
 
 
-        mockMvc.perform(post("/tShirts")
+        mockMvc.perform(post("/tshirt")
                         .content(inputJson)
                         .contentType(MediaType.APPLICATION_JSON))
                         .andDo(print())
@@ -131,7 +130,7 @@ public class TShirtControllerTest {
 
     @Test
     public void ShouldReturn422UProcessableWhenSearchingTShirtByIdWithAwrongEntryType() throws Exception{
-        mockMvc.perform(get("/tShirts/rt"))
+        mockMvc.perform(get("/tshirt/rt"))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
 
@@ -140,7 +139,7 @@ public class TShirtControllerTest {
     @Test
     public void ShouldReturn404NotFoundWhenMisSpelledUrlProvided() throws Exception{
 
-        mockMvc.perform(get("/tShirts90/1"))
+        mockMvc.perform(get("/tshirt90/1"))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
