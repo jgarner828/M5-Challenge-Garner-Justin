@@ -45,7 +45,7 @@
     <retain-sticky-names value="false" />
   </component>
   <component name="DBNavigator.Project.FileConnectionMappingManager">
-    <mapping file-url="file://$PROJECT_DIR$/MySQL DB/schema.sql" connection-id="f04b130f-1820-49ce-8d36-cd54ae453198" session-id="MAIN" current-schema="mysql" />
+    <mapping file-url="file://$PROJECT_DIR$/MySQL DB/schema.sql" connection-id="f04b130f-1820-49ce-8d36-cd54ae453198" session-id="MAIN" current-schema="game_store_invoicing" />
     <mapping file-url="file://$PROJECT_DIR$/MySQL DB/data.sql" connection-id="f04b130f-1820-49ce-8d36-cd54ae453198" session-id="MAIN" current-schema="mysql" />
   </component>
   <component name="DBNavigator.Project.MethodExecutionManager">
